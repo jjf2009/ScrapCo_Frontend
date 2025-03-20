@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
 import { HiOutlineShoppingCart } from "react-icons/hi";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useAuth } from "../context/AuthContext";
 import { TbPlant2 } from "react-icons/tb";
 import { BsCoin } from "react-icons/bs";
 import { HiMenu, HiX } from "react-icons/hi";
@@ -20,10 +19,21 @@ const Navbar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const cartItems = useSelector((state) => state.cart.cartItems);
     const points = useSelector((state) => state.point.points);
-    const { currentUser, logout } = useAuth();
 
+    // ✅ LocalStorage-based Auth State
+    const [currentUser, setCurrentUser] = useState(null);
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+            setCurrentUser(JSON.parse(storedUser));
+        }
+    }, []);
+
+    // ✅ Logout: Clears user from localStorage
     const handleLogOut = () => {
-        logout();
+        localStorage.removeItem("user");
+        setCurrentUser(null);
         setIsDropdownOpen(false);
     };
 
@@ -50,11 +60,7 @@ const Navbar = () => {
                     {currentUser ? (
                         <div className="relative">
                             <button onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-                                <img
-                                    src={currentUser.photoURL || "/default-avatar.png"}
-                                    alt="User Avatar"
-                                    className="size-7 rounded-full ring-2 ring-blue-500 cursor-pointer"
-                                />
+                                <h2>{currentUser.name || "User"}</h2>
                             </button>
                             {isDropdownOpen && (
                                 <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md z-40">
@@ -73,12 +79,11 @@ const Navbar = () => {
                         </div>
                     ) : (
                         <Link 
-  to="/login" 
-  className="px-4 py-2 bg-white text-black font-medium rounded-full shadow-md hover:bg-gray-200 transition duration-300"
->
-  Login
-</Link>
-
+                            to="/login" 
+                            className="px-4 py-2 bg-white text-black font-medium rounded-full shadow-md hover:bg-gray-200 transition duration-300"
+                        >
+                            Login
+                        </Link>
                     )}
                 </nav>
 
@@ -125,12 +130,11 @@ const Navbar = () => {
                         </>
                     ) : (
                         <Link 
-  to="/login" 
-  className="px-4 py-2 bg-white text-black font-medium rounded-full shadow-md hover:bg-gray-200 transition duration-300"
->
-  Login
-</Link>
-
+                            to="/login" 
+                            className="px-4 py-2 bg-white text-black font-medium rounded-full shadow-md hover:bg-gray-200 transition duration-300"
+                        >
+                            Login
+                        </Link>
                     )}
                 </nav>
             )}

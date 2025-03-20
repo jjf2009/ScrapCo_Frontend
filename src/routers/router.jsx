@@ -2,13 +2,14 @@ import { createBrowserRouter } from "react-router-dom";
 import App from "../App.jsx";
 import Home from "../pages/home/Home";
 import Login from "../components/Login.jsx";
+import Register from "../components/Register.jsx";
 import CartPage from "../pages/scrapitem/CartPage.jsx";
 import CheckoutPage from "../pages/scrapitem/CheckoutPage.jsx";
 import SingleScrapMaterial from "../pages/scrapitem/SingleScrapMaterial.jsx";
 import OrderPage from "../pages/scrapitem/OrderPage.jsx";
 import Shop from "../pages/shop/Shop.jsx";
 import AddItem from "../pages/AddItem/AddItem.jsx";
-
+import PrivateRoute from "./PrivateRoute";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -20,7 +21,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/orders",
-        element: <OrderPage />,
+        element: <PrivateRoute><OrderPage/></PrivateRoute>,
       },
       {
         path: "/login",
@@ -28,11 +29,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/cart",
-        element: <CartPage />,
+        element: <PrivateRoute><CartPage /></PrivateRoute>,
       },
       {
         path: "/checkout",
-        element: <CheckoutPage />,
+        element: <PrivateRoute><CheckoutPage/></PrivateRoute>,
       },
       {
         path: "/scrap/:id",
@@ -40,11 +41,15 @@ const router = createBrowserRouter([
       },
       {
         path: "/shop",
-        element: <Shop/>,
+        element:<PrivateRoute><Shop/></PrivateRoute>,
+      },
+      {
+        path: "/register",
+        element: <Register/>,
       },
       {
         path: "/create",
-        element: <AddItem/>,
+        element: <PrivateRoute><AddItem/></PrivateRoute>,
       },
     ],
   },

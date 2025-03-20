@@ -3,48 +3,42 @@ import InputField from './InputField';
 import SelectField from './SelectField';
 import { useForm } from 'react-hook-form';
 import { useAddItemMutation } from '../../redux/features/items/itemsApi';
-import  { useGetCurrentDealerQuery } from '../../redux/features/dealer/dealerApi'
 import {addToPoint} from '../../redux/features/points/pointsSlice'
 import Swal from 'sweetalert2';
+import { useAuth } from "../../context/AuthContext";
 import { useDispatch } from'react-redux'
+// import axios from "axios";
+// import UploadImage from "./UploadImage";
+
 
 const AddItem = () => {
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
-    // const [imageFile, setImageFile] = useState(null);
-    const [addItem, { isLoading, isError }] = useAddItemMutation();
-    // const [imageFileName, setImageFileName] = useState('');
-    const dispatch =  useDispatch();
+    const [addItem, { isLoading }] = useAddItemMutation();
+    const dispatch = useDispatch();
+    const { currentUser } = useAuth();
+    // const [pictures, setPictures] = useState([]);
 
-    const { data: dealer, isLoading: isDealerLoading } = useGetCurrentDealerQuery();
-
+    // const handleUpload = (imageUrl) => {
+    //     setPictures({ ...data, pictures: [...data.pictures, imageUrl] });
+    //   };
     const onSubmit = async (data) => {
-        if (!dealer) {
-            Swal.fire({
-                title: "Error",
-                text: "User data is not available. Please try again later.",
-                icon: "error",
-            });
-            return;
-        }
-    
         const payload = {
-            user_id: dealer.id || "3970a2cb-6bc1-45e6-bec0-a8c88199eb0d",
-            seller_name: dealer.name || "Jared",
-            seller_phone: dealer.phone || "123456789",
+            user_id: currentUser?.id,
+            seller_name: currentUser.fullName|| "Jared",
+            seller_phone: currentUser.phone|| "123456789",
             description: data.description,
             quantity: parseFloat(data.quantity), // ✅ Convert to Float
             material: data.material,
             pickUpAddress: data.pickUpAddress,
             pickUpTime: data.pickUpTime,
             listPlat: data.listPlat,
-            price: parseFloat(data.price) || 0, // ✅ Convert to Float (optional price)
+            price: parseFloat(data.price) || 0,
+            // pictures, // ✅ Convert to Float (optional price)
         };
-    
        console.log(payload)
-    
         try {
             await addItem(payload).unwrap();
-            dispatch(addToPoint(payload))
+            dispatch(addToPoint({ user_id: payload.user_id, points: 10 })); 
             Swal.fire({
                 title: "Item listed",
                 text: "Your scrap item has been listed successfully!",
@@ -62,15 +56,6 @@ const AddItem = () => {
             });
         }
     };
-    
-    
-    // const handleFileChange = (e) => {
-    //     const file = e.target.files[0];
-    //     if (file) {
-    //         setImageFile(file);
-    //         setImageFileName(file.name);
-    //     }
-    // };
 
     return (
         <div className="max-w-lg mx-auto p-6 bg-green-100 rounded-lg shadow-md">
@@ -101,7 +86,15 @@ const AddItem = () => {
     ]}
     register={register}
 />
+  {/* ✅ Corrected UploadImage Usage */}
+  {/* <UploadImage onUpload={handleUpload} /> */}
 
+{/* ✅ Show Uploaded Images */}
+{/* <div className="flex flex-wrap gap-2 mt-2">
+    {pictures.map((pic, index) => (
+        <img key={index} src={pic} alt="Uploaded" className="w-24 h-24 object-cover rounded-md" />
+    ))}
+</div> */}
 <InputField
     label="Quantity"
     name="quantity"
@@ -140,11 +133,6 @@ const AddItem = () => {
                     placeholder="Set a price (optional)"
                     register={register}
                 />
-                {/* <div className="mb-4">
-                    <label className="block text-sm font-semibold text-green-700 mb-2">Upload Image</label>
-                    <input type="file" accept="image/*" onChange={handleFileChange} className="w-full" />
-                    {imageFileName && <p className="text-sm text-gray-600">Selected: {imageFileName}</p>}
-                </div> */}
                 <button type="submit" className="w-full py-2 bg-green-500 text-white font-bold rounded-md">
                     {isLoading ? "Listing..." : "List Item"}
                 </button>

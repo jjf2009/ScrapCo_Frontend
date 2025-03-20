@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import plastic from "/src/assets/plastic.png";
 import metal from "/src/assets/metal.png";
 import rubber from "/src/assets/rubber.png";
+import banner from "/src/assets/banner2.png";
 
 const Banner = () => {
   const splineRef = useRef(null);
@@ -66,7 +67,7 @@ const Banner = () => {
       {/* Right Section (Spline Model) */}
       <div className="relative lg:w-1/2 flex justify-center items-center lg:mt-0">
   <img 
-    src="/src/assets/banner2.png" 
+    src={banner}
     alt="Banner Image" 
     className="w-full max-w-[600px] h-auto object-contain"
   />

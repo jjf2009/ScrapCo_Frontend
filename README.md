@@ -195,7 +195,7 @@ ScrapCo_Frontend/
 │   │   │   ├── Banner.jsx
 │   │   │   ├── Card.jsx
 │   │   │   ├── Home.jsx
-│   │   │   └── Recommened.jsx
+│   │   │   └── Recommended.jsx
 │   │   ├── scrapitem/        # Scrap item related pages
 │   │   │   ├── CartPage.jsx
 │   │   │   ├── CheckoutPage.jsx
@@ -203,7 +203,7 @@ ScrapCo_Frontend/
 │   │   │   └── SingleScrapMaterial.jsx
 │   │   └── shop/             # Shop pages
 │   │       ├── Banner.jsx
-│   │       ├── Recommened.jsx
+│   │       ├── Recommended.jsx
 │   │       └── Shop.jsx
 │   ├── redux/                 # Redux state management
 │   │   ├── features/         # Redux slices
